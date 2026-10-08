@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - SelfBurnOut</title>
+    <script src="~/js/theme.js" asp-append-version="true"></script>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+</head>
+<body class="d-flex flex-column min-vh-100">
+    <header>
+        <nav class="navbar navbar-expand-sm app-nav">
+            <div class="container">
+                <a class="navbar-brand" asp-controller="Pomodoro" asp-action="Index">SelfBurnOut</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#nav-menu" aria-controls="nav-menu"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="navbar-collapse collapse" id="nav-menu">
+                    <ul class="navbar-nav me-auto">
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Pomodoro" asp-action="Index">Pomodoro</a>
+                        </li>
+                    </ul>
+                    <ul class="navbar-nav align-items-sm-center gap-sm-2">
+                        @if (User.Identity?.IsAuthenticated == true)
+                        {
+                            var email = User.Identity.Name ?? "";
+                            <li class="nav-item dropdown">
+                                <button class="user-toggle dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Account menu">
+                                    <span class="avatar">@(email.Length > 0 ? email[0] : '?')</span>
+                                    <span class="user-name">@email</span>
+                                </button>
+                                <ul class="dropdown-menu dropdown-menu-end user-menu">
+                                    <li><a class="dropdown-item" asp-controller="Account" asp-action="Settings">Account settings</a></li>
+                                    <li><hr class="dropdown-divider" /></li>
+                                    <li><partial name="_ThemePicker" /></li>
+                                    <li><hr class="dropdown-divider" /></li>
+                                    <li>
+                                        <form asp-controller="Account" asp-action="Logout" method="post">
+                                            <button type="submit" class="dropdown-item">Log out</button>
+                                        </form>
+                                    </li>
+                                </ul>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="nav-item dropdown">
+                                <button class="user-toggle guest dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Choose theme">
+                                    <span>Theme</span>
+                                </button>
+                                <ul class="dropdown-menu dropdown-menu-end user-menu">
+                                    <li><partial name="_ThemePicker" /></li>
+                                </ul>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Account" asp-action="Login">Log in</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Account" asp-action="Register">Register</a>
+                            </li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <div class="container flex-grow-1">
+        <main role="main" class="py-4">
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer class="app-footer">
+        &copy; 2026 SelfBurnOut
+    </footer>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

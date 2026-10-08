@@ -1,0 +1,9 @@
+<div class="menu-label">Theme</div>
+<div class="theme-dots" role="group" aria-label="Theme">
+    @foreach (var (value, name) in new[] { ("light", "Light"), ("black", "Black"), ("green", "Green"), ("red", "Red"), ("yellow", "Yellow"), ("orange", "Orange"), ("purple", "Purple") })
+    {
+        <button type="button" class="theme-dot" data-theme-value="@value" title="@name" aria-label="@name theme">
+            <span class="swatch" data-theme="@value"></span>
+        </button>
+    }
+</div>
