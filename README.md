@@ -57,9 +57,22 @@ dotnet run
 
 Then open the URL shown in the console, register an account and start a session.
 
+### Run with Docker
+
+The repo includes a `Dockerfile` and a `docker-compose.yml` that start the app together with PostgreSQL:
+
+```bash
+cp .env.example .env     # then set a strong POSTGRES_PASSWORD
+docker compose up -d --build
+```
+
+Open http://localhost:8080. Database tables are created automatically on startup, and the data lives in the `pgdata` volume. Stop with `docker compose down` (add `-v` to also delete the data).
+
+The container serves plain HTTP on port 8080, so put a reverse proxy (Caddy, nginx, Traefik) in front of it for HTTPS.
+
 ### Deployment
 
-Provide the connection string through the environment variable `ConnectionStrings__DefaultConnection` instead of user secrets.
+Provide the connection string through the environment variable `ConnectionStrings__DefaultConnection` instead of user secrets. Set `Database__MigrateOnStartup=true` to apply migrations automatically.
 
 ## Project structure
 

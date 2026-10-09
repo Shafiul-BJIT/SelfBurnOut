@@ -1,0 +1,34 @@
+services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: selfburnout
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-password}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-postgres} -d selfburnout"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  app:
+    build:
+      context: ./SelfBurnOut
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    environment:
+      ConnectionStrings__DefaultConnection: Host=db;Port=5432;Database=selfburnout;Username=${POSTGRES_USER:-postgres};Password=${POSTGRES_PASSWORD:-password}
+      Database__MigrateOnStartup: "true"
+    volumes:
+      - appkeys:/keys
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  pgdata:
+  appkeys:
